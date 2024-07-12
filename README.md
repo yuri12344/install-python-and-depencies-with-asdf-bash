@@ -1,1 +1,1 @@
-chmod +x installpython.sh
+chmod +x python.sh
