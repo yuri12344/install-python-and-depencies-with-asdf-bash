@@ -24,13 +24,15 @@ if ! asdf plugin-list | grep -q python; then
     asdf plugin-add python
 fi
 
-# Buscar a versão mais recente estável do Python e instalá-la
-latest_stable_python_version=$(asdf list-all python | grep -v "[a-zA-Z]" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | tail -1)
-asdf install python "$latest_stable_python_version"
-asdf global python "$latest_stable_python_version"
+# Definir a versão fixa do Python como 3.13.2
+PYTHON_VERSION="3.13.2"
+
+# Instalar e definir o Python 3.13.2 como versão global
+asdf install python "$PYTHON_VERSION"
+asdf global python "$PYTHON_VERSION"
 
 # Configurar alias para python apontar para python3
 echo 'alias python=python3' >> ~/.bashrc
 source ~/.bashrc
 
-echo "Instalação completa! Python $latest_stable_python_version configurado como global."
+echo "Instalação completa! Python $PYTHON_VERSION configurado como global."
