@@ -13,11 +13,12 @@ if [ ! -d "$HOME/.asdf" ]; then
     echo "Instalando asdf..."
     git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.2
     echo '. $HOME/.asdf/asdf.sh' >> ~/.bashrc
+    echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.bashrc
     echo '. $HOME/.asdf/asdf.sh' >> ~/.profile
 fi
 
 # Carregar asdf na sessão atual do script
-source $HOME/.asdf/asdf.sh
+source $HOME/.bashrc
 
 # Adicionar o plugin do Python ao asdf, se ainda não estiver adicionado
 if ! asdf plugin-list | grep -q python; then
@@ -31,8 +32,13 @@ PYTHON_VERSION="3.13.2"
 asdf install python "$PYTHON_VERSION"
 asdf global python "$PYTHON_VERSION"
 
+# Aplicar as mudanças do asdf
+asdf reshim python
+
 # Configurar alias para python apontar para python3
 echo 'alias python=python3' >> ~/.bashrc
+
+# Garantir que as mudanças do .bashrc sejam carregadas
 source ~/.bashrc
 
 echo "Instalação completa! Python $PYTHON_VERSION configurado como global."
