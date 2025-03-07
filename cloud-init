@@ -1,0 +1,4 @@
+#cloud-config
+runcmd:
+  - curl -fsSL https://raw.githubusercontent.com/yuri12344/install-with-scripts/main/docker.sh | bash
+  - curl -fsSL https://raw.githubusercontent.com/yuri12344/install-with-scripts/main/python.sh | bash
