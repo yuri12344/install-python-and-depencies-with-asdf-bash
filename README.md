@@ -1,1 +1,1 @@
-chmod +x python.sh
+chmod +x script.sh
