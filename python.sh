@@ -1,44 +1,40 @@
 #!/bin/bash
 
-# Atualizar os pacotes do sistema
-sudo apt-get update
+# Faz o script encerrar se qualquer comando falhar
+set -e
 
-# Instalar dependências necessárias para construir a maioria dos pacotes Python
-sudo apt-get install --no-install-recommends make build-essential libssl-dev \
-zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
-libncurses5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev -y
-
-# Verificar se o asdf já está instalado
-if [ ! -d "$HOME/.asdf" ]; then
-    echo "Instalando asdf..."
-    git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.2
-    echo '. $HOME/.asdf/asdf.sh' >> ~/.bashrc
-    echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.bashrc
-    echo '. $HOME/.asdf/asdf.sh' >> ~/.profile
+# Verifica se o asdf já está instalado
+if [ -d ~/.asdf ]; then
+  echo "asdf já está instalado."
+else
+  # Clona o repositório do asdf na versão v0.14.0
+  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
+  
+  # Adiciona as linhas ao ~/.bashrc apenas se não existirem
+  if ! grep -q '^\. "\$HOME/.asdf/asdf.sh"$' ~/.bashrc; then
+    echo '. "$HOME/.asdf/asdf.sh"' >> ~/.bashrc
+    echo '. "$HOME/.asdf/completions/asdf.bash"' >> ~/.bashrc
+  fi
 fi
 
-# Carregar asdf na sessão atual do script
-source $HOME/.bashrc
-
-# Adicionar o plugin do Python ao asdf, se ainda não estiver adicionado
-if ! asdf plugin-list | grep -q python; then
-    asdf plugin-add python
-fi
-
-# Definir a versão fixa do Python como 3.13.2
-PYTHON_VERSION="3.13.2"
-
-# Instalar e definir o Python 3.13.2 como versão global
-asdf install python "$PYTHON_VERSION"
-asdf global python "$PYTHON_VERSION"
-
-# Aplicar as mudanças do asdf
-asdf reshim python
-
-# Configurar alias para python apontar para python3
-echo 'alias python=python3' >> ~/.bashrc
-
-# Garantir que as mudanças do .bashrc sejam carregadas
+# Aplica as mudanças do ~/.bashrc no ambiente atual do script
 source ~/.bashrc
 
-echo "Instalação completa! Python $PYTHON_VERSION configurado como global."
+# Atualiza os pacotes e instala as dependências necessárias
+sudo apt update && sudo apt install -y \
+  make build-essential libssl-dev zlib1g-dev \
+  libbz2-dev libreadline-dev libsqlite3-dev wget curl \
+  llvm libncursesw5-dev xz-utils tk-dev libxml2-dev \
+  libxmlsec1-dev libffi-dev liblzma-dev
+
+# Adiciona o plugin do Python ao asdf
+asdf plugin-add python
+
+# Instala o Python 3.13.0
+asdf install python 3.13.0
+
+# Define o Python 3.13.0 como versão global
+asdf global python 3.13.0
+
+# Mensagem final para o usuário
+echo "Configuração concluída. Por favor, execute 'source ~/.bashrc' para usar o asdf no seu shell atual."
